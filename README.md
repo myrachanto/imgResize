@@ -1,5 +1,5 @@
 # imgResize Package
-The imgResize package provides a simple way to resize image files in various formats (JPEG, PNG, and WebP). It includes functionality to check the size of the image and skip resizing if the file is smaller than 100KB. The package also handles resizing of images while maintaining their aspect ratio and allows you to save the resized images in the specified format.
+The imgResize package is a Golang package that provides a simple way to resize image files in various formats (JPEG, PNG, and WebP). It includes functionality to check the size of the image and skip resizing if the file is smaller than 100KB. The package also handles resizing of images while maintaining their aspect ratio and allows you to save the resized images in the specified format.
 
 ### Features
 - Resizes images in JPEG, PNG, and WebP formats.

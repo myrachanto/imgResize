@@ -12,7 +12,6 @@ import (
 	"github.com/nfnt/resize"
 )
 
-// Imagetype processes and resizes an image based on its type.
 func ResizeImage(f, filename string, height, width int) error {
 	file, err := os.Open(f)
 	if err != nil {
@@ -37,8 +36,36 @@ func ResizeImage(f, filename string, height, width int) error {
 		return fmt.Errorf("error resetting file pointer: %w", err)
 	}
 
+	var originalWidth, originalHeight int
+	switch filetype {
+	case "image/jpeg", "image/jpg":
+		originalWidth, originalHeight, err = getImageDimensionsJPEG(file)
+	case "image/png":
+		originalWidth, originalHeight, err = getImageDimensionsPNG(file)
+	case "image/webp":
+		originalWidth, originalHeight, err = getImageDimensionsWebP(file)
+	default:
+		return fmt.Errorf("unsupported file format: %s", filetype)
+	}
+	if err != nil {
+		return fmt.Errorf("error retrieving image dimensions: %w", err)
+	}
+
+	// Reset file pointer before processing
+	if _, err := file.Seek(0, 0); err != nil {
+		return fmt.Errorf("error resetting file pointer: %w", err)
+	}
+
+	// Calculate new dimensions while preserving the aspect ratio
+	aspectRatio := float64(originalWidth) / float64(originalHeight)
 	newWidth := uint(width)
-	newHeight := uint(0) // Automatically calculate to maintain aspect ratio
+	newHeight := uint(height)
+
+	if float64(width)/aspectRatio > float64(height) {
+		newWidth = uint(float64(height) * aspectRatio)
+	} else {
+		newHeight = uint(float64(width) / aspectRatio)
+	}
 
 	switch filetype {
 	case "image/jpeg", "image/jpg":
@@ -103,7 +130,7 @@ func resizeJPG(file *os.File, filename string, height, width uint) error {
 // resizeWebP resizes a WebP image.
 func resizeWebP(file *os.File, filename string, height, width uint) error {
 	log.Println("Starting WebP resizing process")
-	
+
 	// Decode the WebP image
 	img, err := webp.Decode(file)
 	if err != nil {
@@ -113,7 +140,7 @@ func resizeWebP(file *os.File, filename string, height, width uint) error {
 
 	// Resize the image
 	m := resize.Resize(width, height, img, resize.Lanczos3)
-	
+
 	// Create the output file
 	out, err := os.Create(filename)
 	if err != nil {
@@ -127,6 +154,32 @@ func resizeWebP(file *os.File, filename string, height, width uint) error {
 	}
 	log.Println("WebP image resized and saved successfully")
 	return nil
+}
+func getImageDimensionsJPEG(file *os.File) (int, int, error) {
+	img, err := jpeg.Decode(file)
+	if err != nil {
+		return 0, 0, err
+	}
+	bounds := img.Bounds()
+	return bounds.Dx(), bounds.Dy(), nil
+}
+
+func getImageDimensionsPNG(file *os.File) (int, int, error) {
+	img, err := png.Decode(file)
+	if err != nil {
+		return 0, 0, err
+	}
+	bounds := img.Bounds()
+	return bounds.Dx(), bounds.Dy(), nil
+}
+
+func getImageDimensionsWebP(file *os.File) (int, int, error) {
+	img, err := webp.Decode(file)
+	if err != nil {
+		return 0, 0, err
+	}
+	bounds := img.Bounds()
+	return bounds.Dx(), bounds.Dy(), nil
 }
 
 // imageSizeChecker checks if the file size is less than 100KB.
