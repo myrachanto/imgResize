@@ -27,7 +27,7 @@ package main
 
 import (
 	"log"
-	"github.com:myrachanto/imgResize"
+	"github.com/myrachanto/imgResize"
 )
 
 func main() {
