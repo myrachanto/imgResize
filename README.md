@@ -13,7 +13,7 @@ To use the imgResize package in your Go project, you can import it using the fol
 
 To import the package
 ```bash
-go get github.com:myrachanto/imgResize.git
+go get github.com:myrachanto/imgResize
 ```
 
 ### Resize an Image
