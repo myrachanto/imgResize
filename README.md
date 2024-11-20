@@ -39,9 +39,9 @@ func main() {
 }
 ```
 
-- func ResizeImage(f, filename string, height, width int) error
-- f: Path to the input image file.
-- filename: Path to the output resized image.
+- func ResizeImage(input, output string, height, width int) error
+- input: Path to the input image file.
+- output: Path to the output resized image.
 - height: Desired height for the resized image (0 for automatic aspect ratio calculation).
 - width: Desired width for the resized image.
 
