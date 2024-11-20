@@ -18,7 +18,7 @@ go get github.com:myrachanto/imgResize.git
 
 ### Resize an Image
 
-You can use the ResizeImage function to resize an image. It will automatically detect the image format (JPEG, PNG, WebP) and resize it accordingly.
+You can use the ResizeImage function to resize an image. It will automatically detect the image format (JPEG, PNG) and resize it accordingly.
 
 Example
 
@@ -50,6 +50,5 @@ The package supports the following image formats:
 
 - JPEG (image/jpeg, image/jpg)
 - PNG (image/png)
-- WebP (image/webp)
 
 The package will automatically skip resizing images that are smaller than 100KB in size. You can check for this behavior by logging the message: image size is smaller than 100kbs.
