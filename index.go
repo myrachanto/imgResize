@@ -11,8 +11,8 @@ import (
 	"github.com/nfnt/resize"
 )
 
-func ResizeImage(f, filename string, height, width int) error {
-	file, err := os.Open(f)
+func ResizeImage(input, output string, height, width int) error {
+	file, err := os.Open(input)
 	if err != nil {
 		return fmt.Errorf("error opening the file: %w", err)
 	}
@@ -68,11 +68,11 @@ func ResizeImage(f, filename string, height, width int) error {
 
 	switch filetype {
 	case "image/jpeg", "image/jpg":
-		if err := resizeJPG(file, filename, newHeight, newWidth); err != nil {
+		if err := resizeJPG(file, output, newHeight, newWidth); err != nil {
 			return fmt.Errorf("error resizing JPEG: %w", err)
 		}
 	case "image/png":
-		if err := resizePng(file, filename, newHeight, newWidth); err != nil {
+		if err := resizePng(file, output, newHeight, newWidth); err != nil {
 			return fmt.Errorf("error resizing PNG: %w", err)
 		}
 	// case "image/webp":
