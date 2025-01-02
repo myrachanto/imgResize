@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/chai2010/webp"
 	"github.com/nfnt/resize"
 )
 
@@ -75,10 +76,10 @@ func ResizeImage(input, output string, height, width int) error {
 		if err := resizePng(file, output, newHeight, newWidth); err != nil {
 			return fmt.Errorf("error resizing PNG: %w", err)
 		}
-	// case "image/webp":
-	// 	if err := resizeWebP(file, filename, newHeight, newWidth); err != nil {
-	// 		return fmt.Errorf("error resizing WebP: %w", err)
-	// 	}
+	case "image/webp":
+		if err := resizeWebP(file, filename, newHeight, newWidth); err != nil {
+			return fmt.Errorf("error resizing WebP: %w", err)
+		}
 	default:
 		return fmt.Errorf("unsupported file format: %s", filetype)
 	}
@@ -127,33 +128,33 @@ func resizeJPG(file *os.File, filename string, height, width uint) error {
 }
 
 // resizeWebP resizes a WebP image.
-// func resizeWebP(file *os.File, filename string, height, width uint) error {
-// 	log.Println("Starting WebP resizing process")
+func resizeWebP(file *os.File, filename string, height, width uint) error {
+	log.Println("Starting WebP resizing process")
 
-// 	// Decode the WebP image
-// 	img, err := webp.Decode(file)
-// 	if err != nil {
-// 		return fmt.Errorf("error decoding WebP: %w", err)
-// 	}
-// 	log.Println("WebP image decoded successfully")
+	// Decode the WebP image
+	img, err := webp.Decode(file)
+	if err != nil {
+		return fmt.Errorf("error decoding WebP: %w", err)
+	}
+	log.Println("WebP image decoded successfully")
 
-// 	// Resize the image
-// 	m := resize.Resize(width, height, img, resize.Lanczos3)
+	// Resize the image
+	m := resize.Resize(width, height, img, resize.Lanczos3)
 
-// 	// Create the output file
-// 	out, err := os.Create(filename)
-// 	if err != nil {
-// 		return fmt.Errorf("error creating WebP file: %w", err)
-// 	}
-// 	defer out.Close()
+	// Create the output file
+	out, err := os.Create(filename)
+	if err != nil {
+		return fmt.Errorf("error creating WebP file: %w", err)
+	}
+	defer out.Close()
 
-//		// Encode the resized image as WebP
-//		if err := webp.Encode(out, m, nil); err != nil {
-//			return fmt.Errorf("error encoding WebP: %w", err)
-//		}
-//		log.Println("WebP image resized and saved successfully")
-//		return nil
-//	}
+	// Encode the resized image as WebP
+	if err := webp.Encode(out, m, nil); err != nil {
+		return fmt.Errorf("error encoding WebP: %w", err)
+	}
+	log.Println("WebP image resized and saved successfully")
+	return nil
+}
 func getImageDimensionsJPEG(file *os.File) (int, int, error) {
 	img, err := jpeg.Decode(file)
 	if err != nil {
