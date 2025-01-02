@@ -77,7 +77,7 @@ func ResizeImage(input, output string, height, width int) error {
 			return fmt.Errorf("error resizing PNG: %w", err)
 		}
 	case "image/webp":
-		if err := resizeWebP(file, filename, newHeight, newWidth); err != nil {
+		if err := resizeWebP(file, output, newHeight, newWidth); err != nil {
 			return fmt.Errorf("error resizing WebP: %w", err)
 		}
 	default:
